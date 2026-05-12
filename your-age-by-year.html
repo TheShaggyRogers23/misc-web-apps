@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Age by Year</title>
+
+  <style>
+    html, body {
+      overscroll-behavior: none;
+    }
+
+    body {
+      background: #141B26;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 22px;
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 30px;
+      margin: 26px 0 18px 0;
+      line-height: 1.15;
+    }
+
+    .subtitle {
+      font-size: 18px;
+      opacity: 0.85;
+      margin-bottom: 26px;
+      line-height: 1.45;
+    }
+
+    .tool-wrap {
+      max-width: 520px;
+      margin: 0 auto 24px auto;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.06);
+      padding: 18px;
+      border-radius: 16px;
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .card-title {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .person-card {
+      background: rgba(255,255,255,0.045);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+
+    .person-title {
+      font-size: 19px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      font-size: 17px;
+      margin: 12px 0 8px 0;
+      opacity: 0.9;
+    }
+
+    input, select {
+      font-size: 20px;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      background: white;
+      color: black;
+      text-align: center;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .birthdate-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    button {
+      font-size: 19px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: none;
+      margin: 6px 0;
+      cursor: pointer;
+      background: white;
+      color: black;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .small-button {
+      font-size: 17px;
+      padding: 10px 12px;
+    }
+
+    .remove-button {
+      background: #ffdddd;
+      color: black;
+    }
+
+    .note {
+      font-size: 15px;
+      opacity: 0.82;
+      margin-top: 12px;
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    #message {
+      display: none;
+      font-size: 18px;
+      margin-top: 10px;
+      color: #9cff9c;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .error-message {
+      color: #ff8888 !important;
+    }
+
+    .preview-title {
+      max-width: 760px;
+      margin: 24px auto 10px auto;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .preview-wrap {
+      width: 100%;
+      max-width: 760px;
+      margin: 0 auto;
+      background: white;
+      color: black;
+      border-radius: 12px;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+
+    .preview-main-title {
+      font-family: monospace;
+      font-size: 17px;
+      text-align: left;
+      padding: 14px 14px 10px 14px;
+      box-sizing: border-box;
+      white-space: pre-wrap;
+      color: black;
+    }
+
+    .preview-placeholder {
+      color: #777;
+    }
+
+    .preview-divider {
+      height: 1px;
+      background: #d0d0d0;
+      width: 100%;
+    }
+
+    textarea {
+      width: 100%;
+      height: 430px;
+      font-size: 15px;
+      border: none;
+      padding: 14px;
+      box-sizing: border-box;
+      resize: vertical;
+      background: white;
+      color: black;
+      line-height: 1.4;
+      font-family: monospace;
+      outline: none;
+      display: block;
+    }
+
+    textarea::placeholder {
+      color: #777;
+      opacity: 1;
+    }
+
+    .reset-wrap {
+      width: 100%;
+      max-width: 760px;
+      margin: 16px auto 0 auto;
+    }
+
+    #popupOverlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 9;
+    }
+
+    .popup {
+      display: none;
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: #1f2a38;
+      color: white;
+      padding: 22px;
+      border-radius: 14px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      z-index: 10;
+      width: 310px;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-sizing: border-box;
+    }
+
+    .popup-title {
+      font-size: 26px;
+      font-weight: bold;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .popup-note {
+      font-size: 18px;
+      line-height: 1.4;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .popup button {
+      display: block;
+      width: 100%;
+      margin: 8px 0;
+    }
+
+    @media (min-width: 600px) {
+      body {
+        padding: 28px;
+      }
+
+      h1 {
+        font-size: 34px;
+      }
+
+      .birthdate-grid {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+
+      .preview-main-title {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Your Age by Year</h1>
+
+  <div class="subtitle">
+    See your age across the years.<br>
+    Create a solo timeline or compare timelines.
+  </div>
+
+  <div class="tool-wrap">
+    <div class="card">
+      <div class="card-title">1. People</div>
+
+      <div id="peopleWrap"></div>
+
+      <button onclick="addPerson()" id="addPersonButton">Add Person</button>
+
+      <div class="note">
+        Add up to 5 people.<br>
+        Tap Year to choose BCE/CE, millennium, century, decade, then year.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">2. Generate</div>
+      <button onclick="generateSoloTimeline()">Generate Timeline</button>
+      <button onclick="generateComparisonTimeline()">Compare Timelines</button>
+      <button onclick="copyTimeline()">Copy Timeline</button>
+      <div id="message"></div>
+    </div>
+  </div>
+
+  <div id="previewTitle" class="preview-title">Preview</div>
+
+  <div class="preview-wrap">
+    <div id="previewMainTitle" class="preview-main-title preview-placeholder">Age timeline will appear here.</div>
+    <div class="preview-divider"></div>
+    <textarea id="output" readonly placeholder="Generated age timeline will appear here."></textarea>
+  </div>
+
+  <div class="reset-wrap">
+    <button onclick="openResetPopup()">Reset</button>
+  </div>
+
+  <div id="popupOverlay" onclick="closeAllPopups()"></div>
+
+  <div id="eraPopup" class="popup">
+    <div class="popup-title">Choose Era</div>
+    <div id="eraList"></div>
+    <button onclick="closeAllPopups()">Cancel</button>
+  </div>
+
+  <div id="millenniumPopup" class="popup">
+    <div class="popup-title">Choose Millennium</div>
+    <div id="millenniumList"></div>
+    <button onclick="openEraPopup(activeYearPersonId)">Back to Era</button>
+    <button onclick="closeAllPopups()">Cancel</button>
+  </div>
+
+  <div id="centuryPopup" class="popup">
+    <div class="popup-title">Choose Century</div>
+    <div id="centuryList"></div>
+    <button onclick="openMillenniumPopup(activeYearPersonId, activeEra)">Back to Millennia</button>
+    <button onclick="closeAllPopups()">Cancel</button>
+  </div>
+
+  <div id="decadePopup" class="popup">
+    <div class="popup-title">Choose Decade</div>
+    <div id="decadeList"></div>
+    <button onclick="openCenturyPopup(activeYearPersonId, activeEra, activeMillenniumStart)">Back to Centuries</button>
+    <button onclick="closeAllPopups()">Cancel</button>
+  </div>
+
+  <div id="yearPopup" class="popup">
+    <div class="popup-title">Choose Year</div>
+    <div id="yearList"></div>
+    <button onclick="openDecadePopup(activeYearPersonId, activeEra, activeCenturyStart)">Back to Decades</button>
+    <button onclick="closeAllPopups()">Cancel</button>
+  </div>
+
+  <div id="resetPopup" class="popup">
+    <div class="popup-title">Reset?</div>
+    <div class="popup-note">
+      This will clear all people and generated preview.
+    </div>
+    <button onclick="confirmReset()">Reset</button>
+    <button onclick="closeAllPopups()">Cancel</button>
+  </div>
+
+  <script>
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ];
+
+    const maxPeople = 5;
+    const maxYear = 9999;
+    const defaultEndAge = 90;
+    const maxEndAge = 120;
+
+    let people = [];
+    let nextPersonId = 1;
+
+    let activeYearPersonId = null;
+    let activeEra = null;
+    let activeMillenniumStart = null;
+    let activeCenturyStart = null;
+    let activeDecadeStart = null;
+
+    let generatedText = "";
+    let fullCopyText = "";
+
+    function addPerson() {
+      if (people.length >= maxPeople) {
+        showMessage("Maximum of 5 people.", true);
+        return;
+      }
+
+      people.push({
+        id: nextPersonId,
+        name: "",
+        month: "",
+        day: "",
+        era: "",
+        year: "",
+        endAge: defaultEndAge
+      });
+
+      nextPersonId++;
+      renderPeople();
+      clearTimeline();
+    }
+
+    function removePerson(id) {
+      if (people.length <= 1) {
+        showMessage("At least one person is required.", true);
+        return;
+      }
+
+      people = people.filter(function(person) {
+        return person.id !== id;
+      });
+
+      renderPeople();
+      clearTimeline();
+    }
+
+    function renderPeople() {
+      const peopleWrap = document.getElementById("peopleWrap");
+      peopleWrap.innerHTML = "";
+
+      for (let i = 0; i < people.length; i++) {
+        const person = people[i];
+
+        const personCard = document.createElement("div");
+        personCard.className = "person-card";
+
+        const personTitle = document.createElement("div");
+        personTitle.className = "person-title";
+        personTitle.textContent = "Person " + (i + 1);
+        personCard.appendChild(personTitle);
+
+        const nameLabel = document.createElement("label");
+        nameLabel.textContent = "Name";
+        personCard.appendChild(nameLabel);
+
+        const nameInput = document.createElement("input");
+        nameInput.type = "text";
+        nameInput.placeholder = "Name";
+        nameInput.value = person.name;
+        nameInput.oninput = function() {
+          person.name = nameInput.value;
+          clearTimeline();
+        };
+        personCard.appendChild(nameInput);
+
+        const grid = document.createElement("div");
+        grid.className = "birthdate-grid";
+
+        const monthWrap = document.createElement("div");
+        const monthLabel = document.createElement("label");
+        monthLabel.textContent = "Month";
+        monthWrap.appendChild(monthLabel);
+
+        const monthSelect = document.createElement("select");
+        monthSelect.innerHTML = buildMonthOptions(person.month);
+        monthSelect.onchange = function() {
+          person.month = monthSelect.value;
+          updatePersonDayIfNeeded(person);
+          renderPeople();
+          clearTimeline();
+        };
+        monthWrap.appendChild(monthSelect);
+
+        const dayWrap = document.createElement("div");
+        const dayLabel = document.createElement("label");
+        dayLabel.textContent = "Day";
+        dayWrap.appendChild(dayLabel);
+
+        const daySelect = document.createElement("select");
+        daySelect.innerHTML = buildDayOptions(person.month, person.era, person.year, person.day);
+        daySelect.onchange = function() {
+          person.day = daySelect.value;
+          clearTimeline();
+        };
+        dayWrap.appendChild(daySelect);
+
+        const yearWrap = document.createElement("div");
+        const yearLabel = document.createElement("label");
+        yearLabel.textContent = "Year";
+        yearWrap.appendChild(yearLabel);
+
+        const yearButton = document.createElement("button");
+        yearButton.className = "small-button";
+        yearButton.textContent = person.year ? formatYearLabel(person.era, Number(person.year)) : "Choose Year";
+        yearButton.onclick = function() {
+          openEraPopup(person.id);
+        };
+        yearWrap.appendChild(yearButton);
+
+        grid.appendChild(monthWrap);
+        grid.appendChild(dayWrap);
+        grid.appendChild(yearWrap);
+
+        personCard.appendChild(grid);
+
+        const endAgeLabel = document.createElement("label");
+        endAgeLabel.textContent = "End Age";
+        personCard.appendChild(endAgeLabel);
+
+        const endAgeInput = document.createElement("input");
+        endAgeInput.type = "number";
+        endAgeInput.min = "1";
+        endAgeInput.max = String(maxEndAge);
+        endAgeInput.step = "1";
+        endAgeInput.value = person.endAge;
+        endAgeInput.oninput = function() {
+          person.endAge = Number(endAgeInput.value);
+          clearTimeline();
+        };
+        personCard.appendChild(endAgeInput);
+
+        if (people.length > 1) {
+          const removeButton = document.createElement("button");
+          removeButton.className = "small-button remove-button";
+          removeButton.textContent = "Remove Person";
+          removeButton.onclick = function() {
+            removePerson(person.id);
+          };
+          personCard.appendChild(removeButton);
+        }
+
+        peopleWrap.appendChild(personCard);
+      }
+
+      const addPersonButton = document.getElementById("addPersonButton");
+      addPersonButton.style.display = people.length >= maxPeople ? "none" : "block";
+    }
+
+    function buildMonthOptions(selectedMonth) {
+      let html = '<option value="" disabled ' + (!selectedMonth ? "selected" : "") + '>MM</option>';
+
+      for (let i = 0; i < monthNames.length; i++) {
+        const value = i + 1;
+        const selected = String(value) === String(selectedMonth) ? "selected" : "";
+        html += '<option value="' + value + '" ' + selected + '>' +
+          String(value).padStart(2, "0") + " — " + monthNames[i] +
+          "</option>";
+      }
+
+      return html;
+    }
+
+    function buildDayOptions(month, era, year, selectedDay) {
+      let daysInMonth = 31;
+
+      if (month) {
+        if (year && era === "CE") {
+          daysInMonth = new Date(Number(year), Number(month), 0).getDate();
+        } else {
+          daysInMonth = new Date(2000, Number(month), 0).getDate();
+        }
+      }
+
+      let html = '<option value="" disabled ' + (!selectedDay ? "selected" : "") + '>DD</option>';
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const selected = String(day) === String(selectedDay) ? "selected" : "";
+        html += '<option value="' + day + '" ' + selected + '>' +
+          String(day).padStart(2, "0") +
+          "</option>";
+      }
+
+      return html;
+    }
+
+    function updatePersonDayIfNeeded(person) {
+      if (!person.day || !person.month) return;
+
+      let daysInMonth = 31;
+
+      if (person.year && person.era === "CE") {
+        daysInMonth = new Date(Number(person.year), Number(person.month), 0).getDate();
+      } else {
+        daysInMonth = new Date(2000, Number(person.month), 0).getDate();
+      }
+
+      if (Number(person.day) > daysInMonth) {
+        person.day = "";
+      }
+    }
+
+    function openEraPopup(personId) {
+      activeYearPersonId = personId;
+      activeEra = null;
+      activeMillenniumStart = null;
+      activeCenturyStart = null;
+      activeDecadeStart = null;
+
+      const eraList = document.getElementById("eraList");
+      eraList.innerHTML = "";
+
+      const bceButton = document.createElement("button");
+      bceButton.textContent = "BCE";
+      bceButton.onclick = function() {
+        openMillenniumPopup(personId, "BCE");
+      };
+      eraList.appendChild(bceButton);
+
+      const ceButton = document.createElement("button");
+      ceButton.textContent = "CE";
+      ceButton.onclick = function() {
+        openMillenniumPopup(personId, "CE");
+      };
+      eraList.appendChild(ceButton);
+
+      showPopup("eraPopup");
+    }
+
+    function openMillenniumPopup(personId, era) {
+      activeYearPersonId = personId;
+      activeEra = era;
+      activeMillenniumStart = null;
+      activeCenturyStart = null;
+      activeDecadeStart = null;
+
+      const millenniumList = document.getElementById("millenniumList");
+      millenniumList.innerHTML = "";
+
+      for (let start = 1; start <= maxYear; start += 1000) {
+        const end = Math.min(start + 999, maxYear);
+        const button = document.createElement("button");
+        button.textContent = formatYearRangeLabel(era, start, end);
+        button.onclick = function() {
+          openCenturyPopup(personId, era, start);
+        };
+        millenniumList.appendChild(button);
+      }
+
+      showPopup("millenniumPopup");
+    }
+
+    function openCenturyPopup(personId, era, millenniumStart) {
+      activeYearPersonId = personId;
+      activeEra = era;
+      activeMillenniumStart = millenniumStart;
+      activeCenturyStart = null;
+      activeDecadeStart = null;
+
+      const centuryList = document.getElementById("centuryList");
+      centuryList.innerHTML = "";
+
+      const millenniumEnd = Math.min(millenniumStart + 999, maxYear);
+
+      for (let start = millenniumStart; start <= millenniumEnd; start += 100) {
+        const end = Math.min(start + 99, millenniumEnd);
+        const button = document.createElement("button");
+        button.textContent = formatYearRangeLabel(era, start, end);
+        button.onclick = function() {
+          openDecadePopup(personId, era, start);
+        };
+        centuryList.appendChild(button);
+      }
+
+      showPopup("centuryPopup");
+    }
+
+    function openDecadePopup(personId, era, centuryStart) {
+      activeYearPersonId = personId;
+      activeEra = era;
+      activeCenturyStart = centuryStart;
+      activeDecadeStart = null;
+
+      const decadeList = document.getElementById("decadeList");
+      decadeList.innerHTML = "";
+
+      const centuryEnd = Math.min(centuryStart + 99, maxYear);
+
+      for (let start = centuryStart; start <= centuryEnd; start += 10) {
+        const end = Math.min(start + 9, centuryEnd);
+        const button = document.createElement("button");
+        button.textContent = formatYearRangeLabel(era, start, end);
+        button.onclick = function() {
+          openYearPopup(personId, era, start);
+        };
+        decadeList.appendChild(button);
+      }
+
+      showPopup("decadePopup");
+    }
+
+    function openYearPopup(personId, era, decadeStart) {
+      activeYearPersonId = personId;
+      activeEra = era;
+      activeDecadeStart = decadeStart;
+
+      const yearList = document.getElementById("yearList");
+      yearList.innerHTML = "";
+
+      const decadeEnd = Math.min(decadeStart + 9, maxYear);
+
+      for (let year = decadeStart; year <= decadeEnd; year++) {
+        const button = document.createElement("button");
+        button.textContent = formatYearLabel(era, year);
+        button.onclick = function() {
+          selectYearForPerson(personId, era, year);
+        };
+        yearList.appendChild(button);
+      }
+
+      showPopup("yearPopup");
+    }
+
+    function selectYearForPerson(personId, era, year) {
+      const person = people.find(function(item) {
+        return item.id === personId;
+      });
+
+      if (person) {
+        person.era = era;
+        person.year = String(year);
+        updatePersonDayIfNeeded(person);
+      }
+
+      renderPeople();
+      clearTimeline();
+      closeAllPopups();
+    }
+
+    function showPopup(popupId) {
+      document.getElementById("popupOverlay").style.display = "block";
+
+      const popupIds = [
+        "eraPopup",
+        "millenniumPopup",
+        "centuryPopup",
+        "decadePopup",
+        "yearPopup",
+        "resetPopup"
+      ];
+
+      for (let i = 0; i < popupIds.length; i++) {
+        document.getElementById(popupIds[i]).style.display =
+          popupIds[i] === popupId ? "block" : "none";
+      }
+    }
+
+    function openResetPopup() {
+      showPopup("resetPopup");
+    }
+
+    function closeAllPopups() {
+      document.getElementById("popupOverlay").style.display = "none";
+
+      const popupIds = [
+        "eraPopup",
+        "millenniumPopup",
+        "centuryPopup",
+        "decadePopup",
+        "yearPopup",
+        "resetPopup"
+      ];
+
+      for (let i = 0; i < popupIds.length; i++) {
+        document.getElementById(popupIds[i]).style.display = "none";
+      }
+    }
+
+    function confirmReset() {
+      people = [];
+      nextPersonId = 1;
+      addPerson();
+
+      clearTimeline();
+      closeAllPopups();
+    }
+
+    function clearTimeline() {
+      generatedText = "";
+      fullCopyText = "";
+
+      document.getElementById("output").value = "";
+      document.getElementById("previewTitle").textContent = "Preview";
+
+      const previewMainTitle = document.getElementById("previewMainTitle");
+      previewMainTitle.textContent = "Age timeline will appear here.";
+      previewMainTitle.classList.add("preview-placeholder");
+
+      hideMessage();
+    }
+
+    function showMessage(text, isError = false) {
+      const message = document.getElementById("message");
+      message.textContent = text;
+      message.style.display = "block";
+
+      if (isError) {
+        message.classList.add("error-message");
+      } else {
+        message.classList.remove("error-message");
+      }
+    }
+
+    function hideMessage() {
+      const message = document.getElementById("message");
+      message.textContent = "";
+      message.style.display = "none";
+      message.classList.remove("error-message");
+    }
+
+    function isValidEndAge(value) {
+      return Number.isInteger(value) && value >= 1 && value <= maxEndAge;
+    }
+
+    function getPersonName(person, index) {
+      const trimmed = person.name.trim();
+      return trimmed ? trimmed : "Person " + (index + 1);
+    }
+
+    function getCompletePeople() {
+      const complete = [];
+
+      for (let i = 0; i < people.length; i++) {
+        const person = people[i];
+
+        if (!person.month || !person.day || !person.year || !person.era) {
+          return null;
+        }
+
+        if (!isValidEndAge(Number(person.endAge))) {
+          showMessage("End Age must be between 1 and 120.", true);
+          return null;
+        }
+
+        complete.push({
+          id: person.id,
+          name: getPersonName(person, i),
+          month: Number(person.month),
+          day: Number(person.day),
+          era: person.era,
+          year: Number(person.year),
+          absoluteYear: toAbsoluteYear(person.era, Number(person.year)),
+          endAge: Number(person.endAge)
+        });
+      }
+
+      return complete;
+    }
+
+    function toAbsoluteYear(era, year) {
+      if (era === "BCE") {
+        return 1 - year;
+      }
+
+      return year;
+    }
+
+    function fromAbsoluteYear(absoluteYear) {
+      if (absoluteYear <= 0) {
+        return {
+          era: "BCE",
+          year: 1 - absoluteYear
+        };
+      }
+
+      return {
+        era: "CE",
+        year: absoluteYear
+      };
+    }
+
+    function formatYearLabel(era, year) {
+      if (era === "BCE") {
+        return year + " BCE";
+      }
+
+      return String(year);
+    }
+
+    function formatAbsoluteYear(absoluteYear) {
+      const converted = fromAbsoluteYear(absoluteYear);
+      return formatYearLabel(converted.era, converted.year);
+    }
+
+    function formatYearRangeLabel(era, startYear, endYear) {
+      if (era === "BCE") {
+        return startYear + "–" + endYear + " BCE";
+      }
+
+      return startYear + "–" + endYear;
+    }
+
+    function formatBirthdate(person) {
+      return (
+        String(person.month).padStart(2, "0") +
+        "/" +
+        String(person.day).padStart(2, "0") +
+        "/" +
+        formatYearLabel(person.era, person.year)
+      );
+    }
+
+    function getAgeLineForPerson(person, absoluteYear) {
+      if (absoluteYear < person.absoluteYear) {
+        return "";
+      }
+
+      const age = absoluteYear - person.absoluteYear;
+
+      if (age === 0) {
+        return person.name + " born";
+      }
+
+      if (age <= person.endAge) {
+        return person.name + " turns " + age;
+      }
+
+      return person.name + " dead " + (age - person.endAge) + " year" + ((age - person.endAge) === 1 ? "" : "s");
+    }
+
+    function generateSoloTimeline() {
+      const completePeople = getCompletePeople();
+
+      if (!completePeople) {
+        showMessage("Complete each person’s birthdate and end age first.", true);
+        return;
+      }
+
+      const person = completePeople[0];
+      const startYear = person.absoluteYear;
+      const endYear = person.absoluteYear + person.endAge;
+
+      const lines = [];
+
+      for (let absoluteYear = startYear; absoluteYear <= endYear; absoluteYear++) {
+        const age = absoluteYear - person.absoluteYear;
+        const displayYear = formatAbsoluteYear(absoluteYear);
+
+        if (age === 0) {
+          lines.push(displayYear + " — born");
+        } else {
+          lines.push(displayYear + " — turns " + age);
+        }
+      }
+
+      generatedText = lines.join("\n");
+
+      const headerText =
+        person.name + "’s YAY Timeline\n" +
+        "Birthdate: " + formatBirthdate(person) + "\n" +
+        "Years: " + formatAbsoluteYear(startYear) + "–" + formatAbsoluteYear(endYear) + "\n" +
+        "End age: " + person.endAge;
+
+      updatePreview(headerText, generatedText);
+      showMessage("Age timeline generated.");
+    }
+
+    function generateComparisonTimeline() {
+      const completePeople = getCompletePeople();
+
+      if (!completePeople) {
+        showMessage("Complete each person’s birthdate and end age first.", true);
+        return;
+      }
+
+      if (completePeople.length < 2) {
+        showMessage("Add at least 2 people to compare timelines.", true);
+        return;
+      }
+
+      const sortedPeople = completePeople.slice().sort(function(a, b) {
+        if (a.absoluteYear !== b.absoluteYear) return a.absoluteYear - b.absoluteYear;
+        if (a.month !== b.month) return a.month - b.month;
+        return a.day - b.day;
+      });
+
+      const startYear = Math.min.apply(null, sortedPeople.map(function(person) {
+        return person.absoluteYear;
+      }));
+
+      const endYear = Math.max.apply(null, sortedPeople.map(function(person) {
+        return person.absoluteYear + person.endAge;
+      }));
+
+      const lines = [];
+
+      for (let absoluteYear = startYear; absoluteYear <= endYear; absoluteYear++) {
+        const parts = [];
+
+        for (let i = 0; i < sortedPeople.length; i++) {
+          const personLine = getAgeLineForPerson(sortedPeople[i], absoluteYear);
+
+          if (personLine) {
+            parts.push(personLine);
+          }
+        }
+
+        if (parts.length > 0) {
+          lines.push(formatAbsoluteYear(absoluteYear) + " — " + parts.join(" | "));
+        }
+      }
+
+      generatedText = lines.join("\n");
+
+      const personHeaderLines = sortedPeople.map(function(person) {
+        return person.name + ": " + formatBirthdate(person) + " — end age " + person.endAge;
+      });
+
+      const headerText =
+        "YAY Timeline Comparison\n" +
+        personHeaderLines.join("\n") + "\n" +
+        "Years: " + formatAbsoluteYear(startYear) + "–" + formatAbsoluteYear(endYear) + "\n" +
+        "Dead years shown after end age";
+
+      updatePreview(headerText, generatedText);
+      showMessage("Timeline comparison generated.");
+    }
+
+    function updatePreview(headerText, bodyText) {
+      const output = document.getElementById("output");
+      const previewMainTitle = document.getElementById("previewMainTitle");
+
+      document.getElementById("previewTitle").textContent = "Preview";
+
+      previewMainTitle.textContent = headerText;
+      previewMainTitle.classList.remove("preview-placeholder");
+
+      output.value = bodyText;
+      output.scrollTop = 0;
+
+      fullCopyText = headerText + "\n\n" + bodyText;
+    }
+
+    function copyTimeline() {
+      if (!fullCopyText) {
+        showMessage("Generate a timeline first.", true);
+        return;
+      }
+
+      fallbackCopyPlainText(fullCopyText, "Timeline copied.");
+    }
+
+    function fallbackCopyPlainText(text, successMessage) {
+      const tempBox = document.createElement("textarea");
+      tempBox.value = text;
+      tempBox.setAttribute("readonly", "");
+      tempBox.style.position = "fixed";
+      tempBox.style.left = "-9999px";
+      tempBox.style.top = "-9999px";
+      tempBox.style.opacity = "0";
+
+      document.body.appendChild(tempBox);
+
+      tempBox.focus();
+      tempBox.select();
+      tempBox.setSelectionRange(0, tempBox.value.length);
+
+      try {
+        document.execCommand("copy");
+        showMessage(successMessage);
+      } catch {
+        showMessage("Copy failed. Select and copy manually.", true);
+      }
+
+      document.body.removeChild(tempBox);
+    }
+
+    addPerson();
+  </script>
+</body>
+</html>
