@@ -39,9 +39,9 @@ input[type=range]{width:100%}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
 .item{min-height:135px;border-radius:18px;overflow:hidden;cursor:pointer;border:1px solid #ffffff22;display:flex;align-items:flex-end;justify-content:center;padding:10px;background:#000}
 .pill{background:#0f172acc;border:1px solid #ffffff33;border-radius:999px;padding:8px 12px;font-weight:900}
-.readout{padding:12px;border-radius:14px;background:#020617;border:1px solid #ffffff22;color:#d1d5db;word-break:break-all;line-height:1.65}
-.guide{display:grid;gap:14px}
-.guide h3{margin:4px 0 2px}
+.readout{padding:12px;border-radius:14px;background:#020617;border:1px solid #ffffff22;color:#d1d5db;word-break:break-word;line-height:1.65}
+.guide{display:grid;gap:18px}
+.guide h3{margin:4px 0 4px}
 .guide b{color:#fff}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(20px);opacity:0;background:#020617;border:1px solid #ffffff33;border-radius:999px;padding:12px 18px;font-weight:900;transition:.18s;z-index:20}
 .toast.show{opacity:1;transform:translateX(-50%)}
@@ -137,9 +137,49 @@ input[type=range]{width:100%}
 <section id="guidePanel" class="panel">
 <h2>Guide</h2>
 <div class="guide readout">
-<div><h3>Color Basics</h3><div><b>HEX:</b> A compact online color code, like #7C3AED.</div><div><b>RGB:</b> Red, green, and blue values that make a color.</div><div><b>HSL:</b> Hue, saturation, and lightness. Useful for adjusting color by feel.</div></div>
-<div><h3>Image Types</h3><div><b>Single:</b> One solid color.</div><div><b>Gradient:</b> A smooth blend between two colors.</div><div><b>Palette:</b> A set of separate colors.</div><div><b>Gradient Palette:</b> A stepped palette between two colors.</div><div><b>Batch:</b> Ten generated options shown at once.</div></div>
-<div><h3>Export Sizes</h3><div><b>Phone:</b> Common phone screen sizes.</div><div><b>Social:</b> Common image formats like posts, covers, thumbnails, and stories.</div><div><b>Square:</b> 1080 × 1080.</div><div><b>Desktop:</b> 1920 × 1080.</div><div><b>Custom:</b> Any width and height you enter.</div></div>
+<div>
+<h3>Color Basics</h3>
+<div><b>HEX:</b> A compact online color code, like #7C3AED.</div>
+<div><b>RGB:</b> Red, green, and blue values that make a color.</div>
+<div><b>HSL:</b> Hue, saturation, and lightness. Useful for adjusting color by feel.</div>
+</div>
+
+<div>
+<h3>Image Types</h3>
+<div><b>Single:</b> One solid color.</div>
+<div><b>Gradient:</b> A smooth blend between two colors.</div>
+<div><b>Palette:</b> A set of separate colors.</div>
+<div><b>Gradient Palette:</b> A stepped palette between two colors.</div>
+<div><b>Batch:</b> Ten generated options shown at once.</div>
+</div>
+
+<div>
+<h3>Styles</h3>
+<div><b>Any:</b> Fully random colors.</div>
+<div><b>Bright:</b> Vivid, lively colors.</div>
+<div><b>Dark:</b> Low-light colors.</div>
+<div><b>Pastel:</b> Light, gentle colors.</div>
+<div><b>Muted:</b> Toned-down, low-intensity colors.</div>
+<div><b>Neon:</b> Electric high-saturation colors.</div>
+<div><b>Warm:</b> Reds, oranges, and yellows.</div>
+<div><b>Cool:</b> Blues, greens, and purples.</div>
+<div><b>Earth:</b> Clay, sand, brown, olive, and natural tones.</div>
+<div><b>Ocean:</b> Aqua, teal, blue, and navy.</div>
+<div><b>Sunset:</b> Orange, pink, purple, and gold.</div>
+<div><b>Candy:</b> Playful pink, blue, purple, and sweet colors.</div>
+<div><b>Vintage:</b> Faded, dusty, retro colors.</div>
+<div><b>Contrast:</b> Colors with strong separation.</div>
+<div><b>Monochrome:</b> One hue family with light/dark variation.</div>
+</div>
+
+<div>
+<h3>Export Sizes</h3>
+<div><b>Phone:</b> Common phone screen sizes.</div>
+<div><b>Social:</b> Common image formats like posts, covers, thumbnails, and stories.</div>
+<div><b>Square:</b> 1080 × 1080.</div>
+<div><b>Desktop:</b> 1920 × 1080.</div>
+<div><b>Custom:</b> Any width and height you enter.</div>
+</div>
 </div>
 </section>
 
