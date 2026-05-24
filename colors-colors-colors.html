@@ -59,7 +59,7 @@ function flipView(arr,on){arr=arr.slice();return on?arr.reverse():arr}
 function fullPal(){return state.palette}function viewPal(){return flipView(state.palAdv?sliceWrap(fullPal(),state.palVis,state.palStart):fullPal(),state.paletteFlipped)}
 function fullGp(){return gradPal(state.gp1,state.gp2,state.gpSteps)}function viewGp(){return flipView(state.gpAdv?sliceWrap(fullGp(),state.gpVis,state.gpStart):fullGp(),state.gpFlipped)}
 function curPal(){return state.mode==="gpalette"?viewGp():viewPal()}function curDir(){return state.mode==="gpalette"?state.gpDir:state.palDir}
-function mkGrad(){let c=colorSet(state.gradStyle,2);state.g1=c[0];state.g2=c[1]}function mkPal(){state.palette=colorSet(state.palStyle,state.palSteps);state.palVis=state.palSteps;state.palStart=1}function mkGp(){let c=colorSet(state.gpStyle,2);state.gp1=c[0];state.gp2=c[1];state.gpVis=state.gpSteps;state.gpStart=1}
+function mkGrad(){let c=colorSet(state.gradStyle,2);state.g1=c[0];state.g2=c[1]}function mkPal(){state.palette=colorSet(state.palStyle,state.palSteps);clampViews()}function mkGp(){let c=colorSet(state.gpStyle,2);state.gp1=c[0];state.gp2=c[1];clampViews()}
 function gradColors(){return state.gradientFlipped?[state.g2,state.g1]:[state.g1,state.g2]}
 function ad(deg,w,h){let r=(parseInt(deg)-90)*Math.PI/180,vx=Math.cos(r),vy=Math.sin(r),p=[[0,0],[w,0],[0,h],[w,h]].map(q=>q[0]*vx+q[1]*vy);return{vx,vy,min:Math.min(...p),max:Math.max(...p)}}
 function drawSteps(ctx,arr,dir,w,h){let img=ctx.createImageData(w,h),data=img.data,a=ad(dir,w,h),cs=arr.map(x2r),n=arr.length,p=0;for(let y=0;y<h;y++)for(let x=0;x<w;x++){let t=((x*a.vx+y*a.vy)-a.min)/(a.max-a.min),i=Math.floor(t*n);i=clamp(i,0,n-1);let c=cs[i];data[p++]=c.r;data[p++]=c.g;data[p++]=c.b;data[p++]=255}ctx.putImageData(img,0,0)}
